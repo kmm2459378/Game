@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RendererUtils;
+using System.Collections.Generic;
+
 
 public class MyRenderPipeline : RenderPipeline
 {
@@ -8,7 +11,7 @@ public class MyRenderPipeline : RenderPipeline
     //ShaderÇî‘çÜÇ≈ãÊï Ç∑ÇÈÇΩÇﬂÇÃÉfÅ[É^
     private ShaderTagId shaderTag = new ShaderTagId("SRPDefaultUnlit");
 
-    protected override void Render(ScriptableRenderContext context, Camera[] cameras)
+    protected override void Render(ScriptableRenderContext context,List<Camera> cameras)
     {
         foreach (var camera in cameras)
         {
@@ -23,13 +26,21 @@ public class MyRenderPipeline : RenderPipeline
             cmd.Clear();
 
             var sorting = new SortingSettings(camera) { criteria = SortingCriteria.CommonOpaque };
-            var draw = new DrawingSettings(shaderTag, sorting);
-            var filter = new FilteringSettings(RenderQueueRange.opaque);
+            var rendererListDesc = new RendererListDesc(shaderTag, cullResults, camera)
+            {
+                sortingCriteria = SortingCriteria.CommonOpaque,
+                renderQueueRange = RenderQueueRange.opaque,
 
-            context.DrawRenderers(cullResults, ref draw, ref filter);
-            context.Submit();
+            };
 
+            var rendererList = context.CreateRendererList(rendererListDesc);
             
+            cmd.DrawRendererList(rendererList);
+
+            context.ExecuteCommandBuffer(cmd);
+            cmd.Clear();
+
+            context.Submit();
         }
     }
 }
