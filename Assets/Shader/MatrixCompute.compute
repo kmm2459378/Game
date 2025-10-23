@@ -1,19 +1,19 @@
+
 #pragma kernel CSMain
 
 RWStructuredBuffer<float4x4> _Matrices;
-
-[numthreads(64, 1, 1)]
+[numthreads(64,1,1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     uint index = id.x;
-    float angle = (index * 10.0) * 0.0174533; // “x¨ƒ‰ƒWƒAƒ“•ÏŠ·
-
-    float4x4 rotY = float4x4(
-        cos(angle), 0, sin(angle), 0,
-        0, 1, 0, 0,
-       -sin(angle), 0, cos(angle), 0,
-        0, 0, 0, 1
+    float angle = (index * 10.0) * 0.0174533;
+    float4x4 rotY = 
+    float4x4(
+    cos(angle), 0, sin(angle),0,
+    0, 1, 0, 0,
+    - sin(angle), 0, cos(angle), 0,
+    0, 0, 0, 1
     );
-
     _Matrices[index] = rotY;
+
 }

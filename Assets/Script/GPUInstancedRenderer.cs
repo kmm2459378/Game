@@ -33,17 +33,11 @@ public class GPUInstancedRenderer : MonoBehaviour
         material.SetBuffer("_Materices", matrixBuffer);
     }
 
-    void Update()
+    private void Update()
     {
-        Graphics.DrawMeshInstancedIndirect(mesh, 0, material
-            new Bounds(Vector3.zero, new Vector3(500, 500, 500)),
-            argsBuffer);        
-    }
-
-    void OnDestroy()
-    {
-        matrixBuffer?.Release();
-        argsBuffer?.Release();
+        
+        Graphics.DrawMeshInstanced
+        
     }
 
 }
